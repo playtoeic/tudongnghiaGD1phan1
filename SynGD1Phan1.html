@@ -6,15 +6,16 @@
     <title>Trò Chơi Ghép Từ Đồng Nghĩa - PLAYTOEIC GD1P1</title>
     <!-- Tích hợp Canvas Confetti để bắn pháo hoa -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Sử dụng bộ Font chữ bo tròn dễ thương hỗ trợ Tiếng Việt cực tốt -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@600;700;900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.25) 30%, rgba(255, 255, 255, 0.25) 100%), 
-                              url('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1920&q=80');
+            font-family: 'Quicksand', 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle, #ffebf0 0%, #ffcbd7 50%, #ffafc1 100%);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: #1e293b;
+            color: #2f3640;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -48,7 +49,7 @@
             100% { transform: translateY(105vh) rotate(720deg) translateX(100px); opacity: 0; }
         }
 
-        /* --- Nội dung chính áp dụng Glassmorphism --- */
+        /* --- Nội dung chính phong cách Hoạt hình Béo tròn --- */
         .main-content {
             position: relative;
             z-index: 1;
@@ -58,24 +59,26 @@
             width: 100%;
         }
         h1 {
-            color: white;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.7); 
-            margin-bottom: 5px;
+            color: #ff477e;
+            text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px rgba(255, 71, 126, 0.2); 
+            margin-bottom: 10px;
             text-align: center;
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 1px;
         }
         .instructions {
-            color: #0369a1;
-            background: rgba(255, 255, 255, 0.75);
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-bottom: 20px;
+            color: #d93d4a;
+            background: #ffffff;
+            padding: 12px 26px;
+            border-radius: 30px;
+            margin-bottom: 25px;
             text-align: center;
             max-width: 700px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 6px 0px #ffb7c5, 0 10px 20px rgba(0,0,0,0.06);
+            border: 3px solid #ff477e;
         }
 
         #reset-btn {
@@ -89,9 +92,9 @@
             padding: 6px 14px;
             font-size: 12px;
             font-weight: bold;
-            border-radius: 15px;
+            border-radius: 25px;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);
+            box-shadow: 0 4px 0px #c84141, 0 6px 10px rgba(0,0,0,0.1);
             transition: all 0.2s;
         }
         #reset-btn:hover { 
