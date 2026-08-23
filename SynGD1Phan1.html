@@ -9,52 +9,38 @@
         body {
             font-family: 'Quicksand', 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: radial-gradient(circle, #ffebf0 0%, #ffcbd7 50%, #ffafc1 100%);
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #2f3640;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            background-size: cover; background-position: center; background-attachment: fixed;
+            color: #2f3640; margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            overflow-x: hidden; position: relative;
         }
 
         .falling-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0;
         }
         .leaf {
-            position: absolute; top: -50px;
-            pointer-events: none;
+            position: absolute; top: -50px; pointer-events: none;
             animation: fall linear infinite;
         }
         @keyframes fall {
             0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
+            10% { opacity: 0.8; } 90% { opacity: 0.8; }
             100% { transform: translateY(105vh) rotate(720deg) translateX(100px); opacity: 0; }
         }
 
         .main-content {
-            position: relative; z-index: 1;
-            display: flex; flex-direction: column; align-items: center; width: 100%;
+            position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%;
         }
         h1 {
-            color: #ff477e;
-            text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px rgba(255, 71, 126, 0.2); 
+            color: #ff477e; text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px rgba(255, 71, 126, 0.2); 
             margin-bottom: 10px; text-align: center; font-size: 36px; font-weight: 900;
         }
         .instructions {
             color: #d93d4a; background: #ffffff; padding: 12px 26px;
             border-radius: 30px; margin-bottom: 25px; text-align: center;
             max-width: 700px; font-size: 16px; font-weight: 700;
-            box-shadow: 0 6px 0px #ffb7c5, 0 10px 20px rgba(0,0,0,0.06);
-            border: 3px solid #ff477e;
+            box-shadow: 0 6px 0px #ffb7c5, 0 10px 20px rgba(0,0,0,0.06); border: 3px solid #ff477e;
         }
 
         #reset-btn {
@@ -62,8 +48,7 @@
             background-color: #f43f5e; color: white; border: none;
             padding: 6px 14px; font-size: 12px; font-weight: bold;
             border-radius: 25px; cursor: pointer;
-            box-shadow: 0 4px 0px #c84141, 0 6px 10px rgba(0,0,0,0.1);
-            transition: all 0.2s;
+            box-shadow: 0 4px 0px #c84141, 0 6px 10px rgba(0,0,0,0.1); transition: all 0.2s;
         }
         #reset-btn:hover { background-color: #e11d48; transform: translateY(-1px); }
         @media (max-width: 600px) { #reset-btn { position: static; margin-bottom: 15px; } }
@@ -78,9 +63,7 @@
             border-radius: 8px; cursor: pointer; font-weight: bold; color: #0369a1;
             transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        .tab-btn.active {
-            background-color: #0284c7; color: white; border-color: #0284c7;
-        }
+        .tab-btn.active { background-color: #0284c7; color: white; border-color: #0284c7; }
 
         #vocab-pool {
             display: flex; flex-wrap: wrap; gap: 10px; width: 100%; max-width: 1200px;
@@ -101,9 +84,7 @@
             background-color: #f97316 !important; transform: scale(1.05);
             box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.5); border-color: transparent !important;
         }
-        .word-author {
-            display: block; font-size: 10px; opacity: 0.85; font-weight: normal; margin-top: 2px;
-        }
+        .word-author { display: block; font-size: 10px; opacity: 0.85; font-weight: normal; margin-top: 2px; }
 
         #floating-cursor-word {
             position: fixed; pointer-events: none; background-color: #f97316;
@@ -125,10 +106,7 @@
             display: flex; flex-direction: column; gap: 10px; box-sizing: border-box;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .vietnamese-def {
-            font-size: 20px; font-weight: 700; color: #0f172a; min-height: 38px;
-            display: flex; align-items: center;
-        }
+        .vietnamese-def { font-size: 20px; font-weight: 700; color: #0f172a; min-height: 38px; display: flex; align-items: center; }
 
         .drop-zone {
             border: 2px dashed rgba(2, 132, 199, 0.25); border-radius: 10px;
@@ -211,7 +189,7 @@
     <div class="main-content">
         <button id="reset-btn">Reset (3)</button>
         <h1>SYNONYMS - PLAYTOEIC (GD1P1)</h1>
-        <p class="instructions" id="status-room">🟢 Ghép từ vào ô tiếng Việt. Kết quả Đúng (Xanh) / Sai (Đỏ) sẽ hiển thị ngay lập tức!</p>
+        <p class="instructions" id="status-room">🟢 Ghép các từ tiếng Anh vào đúng nghĩa Tiếng Việt!</p>
 
         <div class="tab-container">
             <button class="tab-btn active" id="tab-0">Phần 1</button>
@@ -223,7 +201,7 @@
         <div id="game-grid"></div>
 
         <div class="controls">
-            <button id="check-btn">Tổng Kết Phần Này</button>
+            <button id="check-btn">Thống Kê Đóng Góp</button>
             <div id="result-message"></div>
         </div>
     </div>
@@ -233,7 +211,7 @@
     <div class="modal-overlay" id="stats-modal">
         <div class="modal-card">
             <h2>🏆 Bảng Thống Kê Đóng Góp</h2>
-            <p style="font-weight: 600; color: #475569;">Số đáp án đúng do từng người chơi ghép trong Phần này:</p>
+            <p style="font-weight: 600; color: #475569;" id="modal-part-title">Số đáp án đúng do từng người chơi ghép:</p>
             <ul class="stats-list" id="stats-list-container"></ul>
             <button class="close-modal-btn" onclick="document.getElementById('stats-modal').style.display='none'">Đóng lại</button>
         </div>
@@ -300,6 +278,7 @@
         let currentPartIndex = 0;
         let selectedWordLocal = null;
         let resetClickCount = 0; 
+        let hasShownModalForPart = false;
 
         const vocabPool = document.getElementById('vocab-pool');
         const gameGrid = document.getElementById('game-grid');
@@ -327,7 +306,6 @@
             Object.keys(data).forEach(id => {
                 if (id === myUserId) return;
                 const user = data[id];
-                
                 let cursorEl = document.getElementById(`cursor-${id}`);
                 if (!cursorEl) {
                     cursorEl = document.createElement('div');
@@ -340,7 +318,6 @@
                     `;
                     document.body.appendChild(cursorEl);
                 }
-                
                 cursorEl.style.left = user.x + 'px';
                 cursorEl.style.top = user.y + 'px';
 
@@ -358,6 +335,7 @@
             const part = snapshot.val();
             if (part !== null && part !== undefined && part !== currentPartIndex) {
                 currentPartIndex = part;
+                hasShownModalForPart = false;
                 document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
                     btn.classList.toggle('active', idx === part);
                 });
@@ -412,7 +390,6 @@
 
                 if (source.startsWith('zone-')) {
                     const zoneId = parseInt(source.replace('zone-', ''));
-                    
                     runTransaction(ref(db, 'gameState/board'), (currentBoard) => {
                         if (currentBoard) {
                             const targetZone = currentBoard.zones.find(z => z.id === zoneId);
@@ -435,7 +412,7 @@
 
         function renderBoardRealtime(boardState) {
             if (!boardState || boardState.partIndex !== currentPartIndex) {
-                vocabPool.innerHTML = "<div style='color: #666;'>Đang tạo phòng dữ liệu...</div>";
+                vocabPool.innerHTML = "<div style='color: #666;'>Đang tải dữ liệu...</div>";
                 const initialBoard = generateFreshBoard(currentPartIndex);
                 set(ref(db, 'gameState/board'), initialBoard);
                 return;
@@ -460,7 +437,6 @@
                             resetLocalSelection();
                             return;
                         }
-                        
                         selectedWordLocal = { text: word, source: 'pool' };
                         document.querySelectorAll('.clickable-word').forEach(el => el.classList.remove('selected'));
                         wordEl.classList.add('selected');
@@ -468,12 +444,18 @@
                         floatingEl.innerText = word;
                         floatingEl.style.display = 'block';
                         updateFloatingPosition(e.clientX, e.clientY);
-
                         set(ref(db, `presence/${myUserId}/holdingWord`), word);
                     });
                     vocabPool.appendChild(wordEl);
                 });
             }
+
+            let totalPartWords = 0;
+            let currentCorrectWords = 0;
+            let currentTotalPlacedWords = 0;
+            const contributions = {};
+
+            allPartsData[currentPartIndex].forEach(item => totalPartWords += item.eng.length);
 
             if (boardState.zones) {
                 boardState.zones.forEach((zoneData, index) => {
@@ -495,6 +477,7 @@
                         zoneData.currentWords.forEach(wordObj => {
                             const wordText = typeof wordObj === 'object' ? wordObj.word : wordObj;
                             const wordUser = typeof wordObj === 'object' ? wordObj.user : 'Ẩn danh';
+                            currentTotalPlacedWords++;
 
                             const wordInZoneEl = document.createElement('div');
                             wordInZoneEl.className = 'clickable-word';
@@ -505,6 +488,8 @@
                             if (correctAnswers.includes(wordText)) {
                                 wordInZoneEl.style.backgroundColor = "#10b981"; 
                                 wordInZoneEl.style.borderColor = "#059669";
+                                currentCorrectWords++;
+                                contributions[wordUser] = (contributions[wordUser] || 0) + 1;
                             } else {
                                 wordInZoneEl.style.backgroundColor = "#ef4444"; 
                                 wordInZoneEl.style.borderColor = "#dc2626";
@@ -520,7 +505,6 @@
                                     resetLocalSelection();
                                     return;
                                 }
-
                                 selectedWordLocal = { text: wordText, source: `zone-${zoneData.id}` };
                                 document.querySelectorAll('.clickable-word').forEach(el => el.classList.remove('selected'));
                                 wordInZoneEl.classList.add('selected');
@@ -528,7 +512,6 @@
                                 floatingEl.innerText = wordText;
                                 floatingEl.style.display = 'block';
                                 updateFloatingPosition(e.clientX, e.clientY);
-
                                 set(ref(db, `presence/${myUserId}/holdingWord`), wordText);
                             });
 
@@ -544,7 +527,6 @@
 
                             runTransaction(ref(db, 'gameState/board'), (currentBoard) => {
                                 if (!currentBoard) return currentBoard;
-
                                 const newWordObj = { word: wordText, user: username };
 
                                 if (source === 'pool') {
@@ -553,9 +535,7 @@
                                         const targetZone = currentBoard.zones.find(z => z.id === targetZoneId);
                                         if (!targetZone.currentWords) targetZone.currentWords = [];
                                         targetZone.currentWords.push(newWordObj);
-                                    } else {
-                                        return; 
-                                    }
+                                    } else return;
                                 } 
                                 else if (source.startsWith('zone-')) {
                                     const oldZoneId = parseInt(source.replace('zone-', ''));
@@ -570,16 +550,14 @@
                                         const targetZone = currentBoard.zones.find(z => z.id === targetZoneId);
                                         if (!targetZone.currentWords) targetZone.currentWords = [];
                                         targetZone.currentWords.push(newWordObj);
-                                    } else {
-                                        return; 
-                                    }
+                                    } else return;
                                 }
                                 return currentBoard;
                             }).then((result) => {
                                 if (result.committed) {
                                     resetLocalSelection();
                                 } else {
-                                    alert(`Ối! Từ "${wordText}" đã bị một người chơi khác thao tác trước mất rồi.`);
+                                    alert(`Ối! Từ "${wordText}" đã bị người khác thao tác trước mất rồi.`);
                                     resetLocalSelection();
                                 }
                             });
@@ -591,11 +569,26 @@
                     gameGrid.appendChild(card);
                 });
             }
+
+            // TỰ ĐỘNG BẬT BẢNG THỐNG KÊ KHI HOÀN THÀNH 100% PHẦN HIỆN TẠI
+            if (currentCorrectWords === totalPartWords && currentTotalPlacedWords === totalPartWords) {
+                resultMessage.style.color = '#10b981';
+                resultMessage.innerText = `🎉 Xuất sắc! Tất cả từ ở Phần ${currentPartIndex + 1} đã hoàn thành chính xác!`;
+                
+                if (!hasShownModalForPart) {
+                    showContributionBoard(contributions);
+                    hasShownModalForPart = true;
+                }
+            } else {
+                resultMessage.style.color = '#e11d48';
+                resultMessage.innerText = `Đã xếp ${currentTotalPlacedWords}/${totalPartWords} từ (${currentCorrectWords} từ đúng màu xanh).`;
+            }
         }
 
         document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
             btn.addEventListener('click', () => {
                 set(ref(db, 'gameState/currentPart'), idx);
+                hasShownModalForPart = false;
                 const freshBoard = generateFreshBoard(idx);
                 set(ref(db, 'gameState/board'), freshBoard);
                 resultMessage.innerText = "";
@@ -603,56 +596,41 @@
         });
 
         document.getElementById('check-btn').addEventListener('click', () => {
-            const dropZones = document.querySelectorAll('.drop-zone');
-            let totalWordsInPart = 0;
-            let correctWordsCount = 0;
-            let totalUserWords = 0;
-
-            const userContributions = {};
-
-            allPartsData[currentPartIndex].forEach(item => totalWordsInPart += item.eng.length);
-
-            dropZones.forEach(zone => {
+            const contributions = {};
+            document.querySelectorAll('.drop-zone').forEach(zone => {
                 const zoneId = parseInt(zone.dataset.id);
-                const originalData = allPartsData[currentPartIndex][zoneId];
-                const correctAnswers = originalData.eng;
-                const childWords = Array.from(zone.children);
-
-                totalUserWords += childWords.length;
-
-                childWords.forEach(wordEl => {
+                const zoneData = allPartsData[currentPartIndex][zoneId];
+                if (!zoneData) return;
+                
+                const correctAnswers = zoneData.eng;
+                Array.from(zone.children).forEach(wordEl => {
                     const wordText = wordEl.dataset.wordText;
                     const wordUser = wordEl.dataset.wordUser || 'Ẩn danh';
-
                     if (correctAnswers.includes(wordText)) {
-                        correctWordsCount++;
-                        userContributions[wordUser] = (userContributions[wordUser] || 0) + 1;
+                        contributions[wordUser] = (contributions[wordUser] || 0) + 1;
                     }
                 });
             });
-
-            if (correctWordsCount === totalWordsInPart && totalUserWords === totalWordsInPart) {
-                resultMessage.style.color = '#10b981';
-                resultMessage.innerText = `Xuất sắc! Tất cả các từ đã chính xác! 🎉`;
-                showContributionBoard(userContributions);
-            } else {
-                resultMessage.style.color = '#e11d48';
-                resultMessage.innerText = `Vẫn còn từ bị gán sai màu đỏ hoặc chưa xếp hết!`;
-            }
+            showContributionBoard(contributions);
         });
 
         function showContributionBoard(contributions) {
+            document.getElementById('modal-part-title').innerText = `Số đáp án đúng từng người chơi ghép ở Phần ${currentPartIndex + 1}:`;
             const sortedUsers = Object.keys(contributions).sort((a, b) => contributions[b] - contributions[a]);
             const container = document.getElementById('stats-list-container');
             container.innerHTML = "";
 
-            sortedUsers.forEach((user, index) => {
-                const li = document.createElement('li');
-                li.className = `stats-item ${index === 0 ? 'top-1' : ''}`;
-                const crown = index === 0 ? '👑 ' : `${index + 1}. `;
-                li.innerHTML = `<span>${crown}${user}</span> <span>${contributions[user]} đáp án đúng</span>`;
-                container.appendChild(li);
-            });
+            if (sortedUsers.length === 0) {
+                container.innerHTML = "<li class='stats-item'>Chưa có đáp án đúng nào được xếp!</li>";
+            } else {
+                sortedUsers.forEach((user, index) => {
+                    const li = document.createElement('li');
+                    li.className = `stats-item ${index === 0 ? 'top-1' : ''}`;
+                    const crown = index === 0 ? '👑 ' : `${index + 1}. `;
+                    li.innerHTML = `<span>${crown}${user}</span> <span>${contributions[user]} đáp án đúng</span>`;
+                    container.appendChild(li);
+                });
+            }
 
             document.getElementById('stats-modal').style.display = 'flex';
         }
@@ -664,12 +642,13 @@
                 resultMessage.style.color = '#f59e0b';
                 resultMessage.innerText = `Nhấn thêm ${3 - resetClickCount} lần nữa để reset bàn cờ.`;
             } else {
+                hasShownModalForPart = false;
                 const freshBoard = generateFreshBoard(currentPartIndex);
                 set(ref(db, 'gameState/board'), freshBoard).then(() => {
                     resetResetButton();
                     resetLocalSelection();
                     resultMessage.style.color = '#10b981';
-                    resultMessage.innerText = `Đã làm sạch bàn cờ! Các từ đã được nhả về vị trí cũ.`;
+                    resultMessage.innerText = `Đã làm sạch Phần ${currentPartIndex + 1}! Các từ đã được nhả về vị trí cũ.`;
                 });
             }
         });
@@ -677,8 +656,7 @@
         function createFallingElements() {
             const container = document.getElementById('falling-container');
             const elements = ['🍃', '🌿', '🌸', '🌺', '🌴']; 
-            const count = 25; 
-            for (let i = 0; i < count; i++) {
+            for (let i = 0; i < 25; i++) {
                 const item = document.createElement('div');
                 item.classList.add('leaf');
                 item.innerText = elements[Math.floor(Math.random() * elements.length)];
