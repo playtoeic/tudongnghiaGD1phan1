@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trò Chơi Ghép Từ Đồng Nghĩa - PLAYTOEIC GD1P1</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@600;700;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -95,11 +94,15 @@
             background-color: #0284c7; color: white; padding: 9px 16px; border-radius: 8px;
             cursor: pointer; font-weight: 600; font-size: 14px; user-select: none;
             box-shadow: 0 4px 6px rgba(2, 132, 199, 0.15); transition: all 0.15s;
+            position: relative; border: 2px solid transparent;
         }
-        .clickable-word:hover { background-color: #0369a1; transform: translateY(-2px); }
+        .clickable-word:hover { transform: translateY(-2px); }
         .clickable-word.selected {
             background-color: #f97316 !important; transform: scale(1.05);
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.5);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.5); border-color: transparent !important;
+        }
+        .word-author {
+            display: block; font-size: 10px; opacity: 0.85; font-weight: normal; margin-top: 2px;
         }
 
         #floating-cursor-word {
@@ -168,6 +171,32 @@
             white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             border: 1px solid rgba(255,255,255,0.2); animation: pulse-glow 1.5s infinite ease-in-out;
         }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: center; z-index: 100000;
+        }
+        .modal-card {
+            background: #ffffff; border-radius: 20px; padding: 25px 30px;
+            width: 90%; max-width: 450px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 3px solid #ff477e;
+        }
+        .modal-card h2 { color: #ff477e; margin-top: 0; font-size: 24px; }
+        .stats-list { margin: 20px 0; padding: 0; list-style: none; text-align: left; }
+        .stats-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; margin-bottom: 8px; background: #fff0f3;
+            border-radius: 10px; font-weight: bold; color: #2f3640;
+        }
+        .stats-item.top-1 { background: #fef08a; border: 2px solid #eab308; }
+        .close-modal-btn {
+            background-color: #0284c7; color: white; border: none;
+            padding: 10px 24px; font-size: 15px; font-weight: bold;
+            border-radius: 20px; cursor: pointer; transition: all 0.2s;
+        }
+        .close-modal-btn:hover { background-color: #0369a1; }
+
         @keyframes pulse-glow {
             0% { transform: scale(1); opacity: 0.9; }
             50% { transform: scale(1.03); opacity: 1; }
@@ -182,7 +211,7 @@
     <div class="main-content">
         <button id="reset-btn">Reset (3)</button>
         <h1>SYNONYMS - PLAYTOEIC (GD1P1)</h1>
-        <p class="instructions" id="status-room">🟢 Hãy ghép từ vào ô tiếng Việt và kiểm tra!</p>
+        <p class="instructions" id="status-room">🟢 Ghép từ vào ô tiếng Việt. Kết quả Đúng (Xanh) / Sai (Đỏ) sẽ hiển thị ngay lập tức!</p>
 
         <div class="tab-container">
             <button class="tab-btn active" id="tab-0">Phần 1</button>
@@ -194,12 +223,21 @@
         <div id="game-grid"></div>
 
         <div class="controls">
-            <button id="check-btn">Kiểm tra Phần này</button>
+            <button id="check-btn">Tổng Kết Phần Này</button>
             <div id="result-message"></div>
         </div>
     </div>
 
     <div id="floating-cursor-word"></div>
+
+    <div class="modal-overlay" id="stats-modal">
+        <div class="modal-card">
+            <h2>🏆 Bảng Thống Kê Đóng Góp</h2>
+            <p style="font-weight: 600; color: #475569;">Số đáp án đúng do từng người chơi ghép trong Phần này:</p>
+            <ul class="stats-list" id="stats-list-container"></ul>
+            <button class="close-modal-btn" onclick="document.getElementById('stats-modal').style.display='none'">Đóng lại</button>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -269,7 +307,6 @@
         const floatingEl = document.getElementById('floating-cursor-word');
         const resetBtn = document.getElementById('reset-btn');
 
-        // --- Thiết lập Presence ---
         const myPresenceRef = ref(db, `presence/${myUserId}`);
         set(myPresenceRef, { name: username, color: myColor, x: 0, y: 0, holdingWord: "" });
         onDisconnect(myPresenceRef).remove();
@@ -280,11 +317,8 @@
             set(ref(db, `presence/${myUserId}/y`), e.clientY);
         });
 
-        // Lắng nghe vị trí con trỏ của người chơi khác
         onValue(ref(db, 'presence'), (snapshot) => {
             const data = snapshot.val() || {};
-            
-            // Xóa các con trỏ DOM của những người chơi đã ngắt kết nối
             document.querySelectorAll('.other-cursor').forEach(el => {
                 const userId = el.id.replace('cursor-', '');
                 if (!data[userId]) el.remove();
@@ -320,7 +354,6 @@
             });
         });
 
-        // --- Lắng nghe dữ liệu Game đồng bộ ---
         onValue(ref(db, 'gameState/currentPart'), (snapshot) => {
             const part = snapshot.val();
             if (part !== null && part !== undefined && part !== currentPartIndex) {
@@ -372,7 +405,6 @@
             };
         }
 
-        // Click kho từ thả lại từ đang cầm
         vocabPool.addEventListener('click', () => {
             if (selectedWordLocal) {
                 const wordText = selectedWordLocal.text;
@@ -384,8 +416,11 @@
                     runTransaction(ref(db, 'gameState/board'), (currentBoard) => {
                         if (currentBoard) {
                             const targetZone = currentBoard.zones.find(z => z.id === zoneId);
-                            if (targetZone && targetZone.currentWords && targetZone.currentWords.includes(wordText)) {
-                                targetZone.currentWords = targetZone.currentWords.filter(w => w !== wordText);
+                            if (targetZone && targetZone.currentWords) {
+                                targetZone.currentWords = targetZone.currentWords.filter(item => {
+                                    const text = typeof item === 'object' ? item.word : item;
+                                    return text !== wordText;
+                                });
                                 if (!currentBoard.pool) currentBoard.pool = [];
                                 currentBoard.pool.push(wordText);
                             }
@@ -454,32 +489,47 @@
                     dropZone.classList.add('drop-zone');
                     dropZone.dataset.id = zoneData.id;
 
+                    const correctAnswers = zoneData.answers ? zoneData.answers.split(',') : [];
+
                     if (zoneData.currentWords) {
-                        zoneData.currentWords.forEach(word => {
+                        zoneData.currentWords.forEach(wordObj => {
+                            const wordText = typeof wordObj === 'object' ? wordObj.word : wordObj;
+                            const wordUser = typeof wordObj === 'object' ? wordObj.user : 'Ẩn danh';
+
                             const wordInZoneEl = document.createElement('div');
                             wordInZoneEl.className = 'clickable-word';
-                            wordInZoneEl.innerText = word;
+                            wordInZoneEl.innerHTML = `${wordText} <span class="word-author">👤 ${wordUser}</span>`;
+                            wordInZoneEl.dataset.wordText = wordText;
+                            wordInZoneEl.dataset.wordUser = wordUser;
 
-                            if (selectedWordLocal && selectedWordLocal.text === word && selectedWordLocal.source === `zone-${zoneData.id}`) {
+                            if (correctAnswers.includes(wordText)) {
+                                wordInZoneEl.style.backgroundColor = "#10b981"; 
+                                wordInZoneEl.style.borderColor = "#059669";
+                            } else {
+                                wordInZoneEl.style.backgroundColor = "#ef4444"; 
+                                wordInZoneEl.style.borderColor = "#dc2626";
+                            }
+
+                            if (selectedWordLocal && selectedWordLocal.text === wordText && selectedWordLocal.source === `zone-${zoneData.id}`) {
                                 wordInZoneEl.classList.add('selected');
                             }
 
                             wordInZoneEl.addEventListener('click', (e) => {
                                 e.stopPropagation();
-                                if (selectedWordLocal && selectedWordLocal.text === word && selectedWordLocal.source === `zone-${zoneData.id}`) {
+                                if (selectedWordLocal && selectedWordLocal.text === wordText && selectedWordLocal.source === `zone-${zoneData.id}`) {
                                     resetLocalSelection();
                                     return;
                                 }
 
-                                selectedWordLocal = { text: word, source: `zone-${zoneData.id}` };
+                                selectedWordLocal = { text: wordText, source: `zone-${zoneData.id}` };
                                 document.querySelectorAll('.clickable-word').forEach(el => el.classList.remove('selected'));
                                 wordInZoneEl.classList.add('selected');
                                 
-                                floatingEl.innerText = word;
+                                floatingEl.innerText = wordText;
                                 floatingEl.style.display = 'block';
                                 updateFloatingPosition(e.clientX, e.clientY);
 
-                                set(ref(db, `presence/${myUserId}/holdingWord`), word);
+                                set(ref(db, `presence/${myUserId}/holdingWord`), wordText);
                             });
 
                             dropZone.appendChild(wordInZoneEl);
@@ -495,12 +545,14 @@
                             runTransaction(ref(db, 'gameState/board'), (currentBoard) => {
                                 if (!currentBoard) return currentBoard;
 
+                                const newWordObj = { word: wordText, user: username };
+
                                 if (source === 'pool') {
                                     if (currentBoard.pool && currentBoard.pool.includes(wordText)) {
                                         currentBoard.pool = currentBoard.pool.filter(w => w !== wordText);
                                         const targetZone = currentBoard.zones.find(z => z.id === targetZoneId);
                                         if (!targetZone.currentWords) targetZone.currentWords = [];
-                                        targetZone.currentWords.push(wordText);
+                                        targetZone.currentWords.push(newWordObj);
                                     } else {
                                         return; 
                                     }
@@ -510,11 +562,14 @@
                                     if (oldZoneId === targetZoneId) return currentBoard;
 
                                     const oldZone = currentBoard.zones.find(z => z.id === oldZoneId);
-                                    if (oldZone && oldZone.currentWords && oldZone.currentWords.includes(wordText)) {
-                                        oldZone.currentWords = oldZone.currentWords.filter(w => w !== wordText);
+                                    if (oldZone && oldZone.currentWords) {
+                                        oldZone.currentWords = oldZone.currentWords.filter(item => {
+                                            const text = typeof item === 'object' ? item.word : item;
+                                            return text !== wordText;
+                                        });
                                         const targetZone = currentBoard.zones.find(z => z.id === targetZoneId);
                                         if (!targetZone.currentWords) targetZone.currentWords = [];
-                                        targetZone.currentWords.push(wordText);
+                                        targetZone.currentWords.push(newWordObj);
                                     } else {
                                         return; 
                                     }
@@ -553,6 +608,8 @@
             let correctWordsCount = 0;
             let totalUserWords = 0;
 
+            const userContributions = {};
+
             allPartsData[currentPartIndex].forEach(item => totalWordsInPart += item.eng.length);
 
             dropZones.forEach(zone => {
@@ -564,25 +621,41 @@
                 totalUserWords += childWords.length;
 
                 childWords.forEach(wordEl => {
-                    const wordText = wordEl.innerText.trim();
+                    const wordText = wordEl.dataset.wordText;
+                    const wordUser = wordEl.dataset.wordUser || 'Ẩn danh';
+
                     if (correctAnswers.includes(wordText)) {
-                        wordEl.style.backgroundColor = "#10b981";
                         correctWordsCount++;
-                    } else {
-                        wordEl.style.backgroundColor = "#ef4444";
+                        userContributions[wordUser] = (userContributions[wordUser] || 0) + 1;
                     }
                 });
             });
 
             if (correctWordsCount === totalWordsInPart && totalUserWords === totalWordsInPart) {
                 resultMessage.style.color = '#10b981';
-                resultMessage.innerText = `Xuất sắc! Các bạn đã đưa toàn bộ các từ về đúng vị trí! 🎉`;
-                triggerFireworks();
+                resultMessage.innerText = `Xuất sắc! Tất cả các từ đã chính xác! 🎉`;
+                showContributionBoard(userContributions);
             } else {
                 resultMessage.style.color = '#e11d48';
-                resultMessage.innerText = `Sắp rồi, cùng xem lại các ô màu đỏ xem nhầm ở đâu nhaaa.`;
+                resultMessage.innerText = `Vẫn còn từ bị gán sai màu đỏ hoặc chưa xếp hết!`;
             }
         });
+
+        function showContributionBoard(contributions) {
+            const sortedUsers = Object.keys(contributions).sort((a, b) => contributions[b] - contributions[a]);
+            const container = document.getElementById('stats-list-container');
+            container.innerHTML = "";
+
+            sortedUsers.forEach((user, index) => {
+                const li = document.createElement('li');
+                li.className = `stats-item ${index === 0 ? 'top-1' : ''}`;
+                const crown = index === 0 ? '👑 ' : `${index + 1}. `;
+                li.innerHTML = `<span>${crown}${user}</span> <span>${contributions[user]} đáp án đúng</span>`;
+                container.appendChild(li);
+            });
+
+            document.getElementById('stats-modal').style.display = 'flex';
+        }
 
         resetBtn.addEventListener('click', () => {
             resetClickCount++;
@@ -600,15 +673,6 @@
                 });
             }
         });
-
-        function triggerFireworks() {
-            const end = Date.now() + 3000;
-            (function frame() {
-                confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0, y: 0.85 } });
-                confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1, y: 0.85 } });
-                if (Date.now() < end) requestAnimationFrame(frame);
-            }());
-        }
 
         function createFallingElements() {
             const container = document.getElementById('falling-container');
